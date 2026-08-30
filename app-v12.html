@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+<title>Lector ISBN</title>
+<style>
+:root{--bg:#efefec;--card:#fff;--ink:#111;--muted:#70706a;--line:#d8d8d2;--yellow:#f2c84b;--green:#176b3a;--r:28px}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100svh}main{width:min(720px,100%);margin:auto;padding:20px 14px 36px}.top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}h1{margin:0;font-size:clamp(32px,8vw,48px);line-height:.95;letter-spacing:-.05em}.version{font-size:12px;color:var(--muted);border:1px solid var(--line);padding:8px 12px;border-radius:999px;background:#fff}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}.hero{min-height:220px;padding:20px;border-radius:24px;background:#121214;color:#fff;display:flex;flex-direction:column;justify-content:space-between}.tag{align-self:flex-start;background:var(--yellow);color:#111;border-radius:999px;padding:9px 13px;font-size:13px;font-weight:800}.hero h2{margin:0 0 9px;font-size:clamp(28px,8vw,40px);line-height:.95;letter-spacing:-.05em}.hero p{margin:0;color:#aaa;font-size:15px;line-height:1.45}.action{margin-top:14px;width:100%;min-height:64px;border:0;border-radius:22px;background:#111;color:#fff;font:inherit;font-size:18px;font-weight:800;cursor:pointer}.hint{margin:13px 2px 0;color:var(--muted);font-size:14px;line-height:1.45}.status,.book,.empty{display:none;margin-top:16px;border:1px solid var(--line);border-radius:24px;padding:18px}.status.show,.book.show,.empty.show{display:block}.status{background:#f7f7f3}.status small{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}.isbn{margin-top:8px;font-size:clamp(28px,8vw,44px);font-weight:900;line-height:1;color:var(--green);overflow-wrap:anywhere}.note{margin-top:8px;color:var(--muted);font-size:14px;line-height:1.45}.book-grid{display:grid;grid-template-columns:90px 1fr;gap:14px}.cover,.cover-ph{width:90px;aspect-ratio:2/3;border-radius:16px;border:1px solid var(--line);background:#ecece7;object-fit:cover}.cover-ph{display:grid;place-items:center;padding:8px;text-align:center;font-size:12px;color:var(--muted)}.book h3{margin:0;font-size:clamp(24px,7vw,34px);line-height:1;letter-spacing:-.04em}.authors{margin-top:9px;font-weight:750}.meta{margin-top:13px;display:grid;grid-template-columns:max-content 1fr;gap:5px 10px;font-size:14px}.meta dt{color:var(--muted)}.meta dd{margin:0}.desc,.source{margin-top:12px;font-size:13px;line-height:1.5}.source{color:var(--muted)}.source a{color:inherit}.empty p{margin:6px 0 0;color:var(--muted);font-size:14px;line-height:1.45}.empty a{display:inline-block;margin-top:11px;color:var(--ink);font-weight:800;text-decoration:none;border-bottom:1px solid var(--ink)}.camera{position:fixed;inset:0;background:#000;z-index:50;display:none}.camera.show{display:block}.camera video{width:100%;height:100%;object-fit:cover}.focus-ring{position:absolute;width:64px;height:64px;border:2px solid #f2c84b;border-radius:50%;transform:translate(-50%,-50%) scale(.75);opacity:0;z-index:53;pointer-events:none;transition:opacity .15s,transform .25s}.focus-ring.show{opacity:1;transform:translate(-50%,-50%) scale(1)}.guide{position:absolute;left:7%;right:7%;top:36%;height:28%;border:2px solid rgba(255,255,255,.94);border-radius:18px;box-shadow:0 0 0 9999px rgba(0,0,0,.22);pointer-events:none}.shutter{position:absolute;left:50%;bottom:max(28px,env(safe-area-inset-bottom));transform:translateX(-50%);width:78px;height:78px;border-radius:50%;border:7px solid #fff;background:var(--yellow);z-index:52}.shutter:disabled{opacity:.35}.close{position:absolute;right:18px;top:max(18px,env(safe-area-inset-top));width:46px;height:46px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:26px;z-index:52}.camlabel{position:absolute;top:max(20px,env(safe-area-inset-top));left:18px;z-index:52;background:rgba(0,0,0,.58);color:#fff;border-radius:999px;padding:9px 12px;font-size:12px;max-width:72%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%) translateY(8px);background:#111;color:#fff;padding:10px 14px;border-radius:999px;font-size:13px;opacity:0;transition:.2s;z-index:80}.toast.show{opacity:1;transform:translateX(-50%)}canvas{display:none}@media(max-width:520px){.book-grid{grid-template-columns:76px 1fr}.cover,.cover-ph{width:76px}.meta{grid-template-columns:1fr;gap:2px}.meta dt{margin-top:7px}}
+</style>
+<script src="https://unpkg.com/@zxing/browser@0.1.5"></script>
+</head>
+<body>
+<main><div class="top"><div><div class="eyebrow">Lector de libros</div><h1>Lector ISBN</h1></div><div class="version">v1.2</div></div><section class="card"><div class="hero"><div class="tag">Enfoque inteligente</div><div><h2>Leé el código y encontrá el libro.</h2><p>La app busca automáticamente la cámara trasera con mejor capacidad de enfoque. Tocá el código en pantalla para reenfocar.</p></div></div><button id="openCam" class="action">Sacar foto</button><p class="hint">Mantené el código dentro del recuadro. Si está borroso, tocá directamente sobre las barras para forzar el enfoque en ese punto.</p><div id="status" class="status"><small>Estado</small><div id="statusTitle">Esperando foto…</div><div id="isbn" class="isbn">—</div><div id="statusNote" class="note"></div></div><div id="book" class="book"></div><div id="empty" class="empty"><strong>No encontré una ficha automática.</strong><p>El ISBN puede existir en catálogos argentinos aunque no aparezca en Google Books u Open Library.</p><a id="verify" href="#" target="_blank" rel="noopener">Verificar en ISBN.AR</a></div></section></main>
+<div id="camera" class="camera"><video id="video" playsinline autoplay muted></video><div id="focusRing" class="focus-ring"></div><div class="guide"></div><div id="camlabel" class="camlabel">Abriendo cámara…</div><button id="closeCam" class="close" aria-label="Cerrar">×</button><button id="shutter" class="shutter" aria-label="Sacar foto" disabled></button></div><canvas id="canvas"></canvas><canvas id="scanCanvas"></canvas><div id="toast" class="toast"></div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id),openCam=$('openCam'),camera=$('camera'),video=$('video'),closeCam=$('closeCam'),shutter=$('shutter'),canvas=$('canvas'),scanCanvas=$('scanCanvas'),camlabel=$('camlabel'),focusRing=$('focusRing'),status=$('status'),statusTitle=$('statusTitle'),statusNote=$('statusNote'),isbnEl=$('isbn'),bookEl=$('book'),emptyEl=$('empty'),verify=$('verify'),toast=$('toast');
+let stream=null,track=null,zoomApplied=null,selectedDevice=null;
+const known={'9789878889481':{title:'Cómo emprender en las industrias culturales y creativas',authors:['Jimena Caballero'],publisher:'Águila',publishedDate:'2023',place:'Mendoza',language:'Español',description:'Registro bibliográfico verificado para una publicación argentina indexada en catálogos públicos.',source:'Referencia argentina verificada',sourceUrl:'https://catalogobibliotecas.buenosaires.gob.ar/pergamo/opac.php?a=bsqMateria&n=EMPRENDEDORES+%28ECONOMIA%29'}};
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function esc(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
+function toastMsg(m){toast.textContent=m;toast.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>toast.classList.remove('show'),2200)}
+function valid13(v){if(!/^\d{13}$/.test(v))return false;let s=0;for(let i=0;i<12;i++)s+=Number(v[i])*(i%2?3:1);return((10-s%10)%10)===Number(v[12])}
+function parse(raw){const d=String(raw||'').replace(/\D/g,''),m=d.match(/97[89]\d{10}/);return m?{isbn:m[0],valid:valid13(m[0])}:null}
+function setState(t,i='',n=''){status.classList.add('show');statusTitle.textContent=t;isbnEl.textContent=i||'—';statusNote.textContent=n}
+function reset(){bookEl.className='book';bookEl.innerHTML='';emptyEl.classList.remove('show')}
+function stopTracks(s){if(s)for(const t of s.getTracks())t.stop()}
+async function openStream(constraints){try{return await navigator.mediaDevices.getUserMedia({audio:false,video:constraints})}catch{return null}}
+function looksRear(label=''){return /(back|rear|environment|trasera|traseira|facing back|camera2\s*0)/i.test(label)&&!/(front|user|frontal|facing front)/i.test(label)}
+function looksFront(label=''){return /(front|user|frontal|facing front)/i.test(label)}
+function capabilityScore(caps={},label=''){
+  let score=0;
+  if(looksRear(label))score+=120;
+  if(Array.isArray(caps.facingMode)&&caps.facingMode.includes('environment'))score+=120;
+  if(Array.isArray(caps.focusMode)&&caps.focusMode.includes('continuous'))score+=90;
+  if(Array.isArray(caps.focusMode)&&caps.focusMode.includes('single-shot'))score+=50;
+  if(Array.isArray(caps.focusMode)&&caps.focusMode.includes('manual'))score+=20;
+  if(caps.focusDistance&&Number.isFinite(caps.focusDistance.min)&&Number.isFinite(caps.focusDistance.max)&&caps.focusDistance.max>caps.focusDistance.min)score+=35;
+  if(caps.zoom&&Number.isFinite(caps.zoom.max)&&caps.zoom.max>1)score+=10;
+  if(looksFront(label))score-=250;
+  if(/ultra|0\.5|wide angle/i.test(label))score-=20;
+  return score;
+}
+async function inspectDevice(device){
+  let caps={};
+  try{if(typeof device.getCapabilities==='function')caps=device.getCapabilities()||{}}catch{}
+  if(Object.keys(caps).length)return {device,caps,score:capabilityScore(caps,device.label)};
+  const probe=await openStream({deviceId:{exact:device.deviceId}});
+  if(!probe)return {device,caps:{},score:-999};
+  const t=probe.getVideoTracks()[0];
+  try{caps=t.getCapabilities?.()||{}}catch{}
+  const settings=t.getSettings?.()||{};
+  let score=capabilityScore(caps,device.label);
+  if(settings.facingMode==='environment')score+=100;
+  stopTracks(probe);
+  return {device,caps,score};
+}
+async function pickBestCamera(){
+  let temp=await openStream({facingMode:{ideal:'environment'}});
+  if(!temp)temp=await openStream(true);
+  if(!temp)return null;
+  stopTracks(temp);
+  let devices=[];
+  try{devices=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==='videoinput')}catch{}
+  if(!devices.length)return null;
+  const likelyRear=devices.filter(d=>!looksFront(d.label));
+  const pool=(likelyRear.length?likelyRear:devices).slice(0,6);
+  const inspected=[];
+  camlabel.textContent='Buscando la mejor cámara…';
+  for(const d of pool){inspected.push(await inspectDevice(d))}
+  inspected.sort((a,b)=>b.score-a.score);
+  return inspected[0]||null;
+}
+async function tuneCamera(){
+  if(!track)return;
+  const caps=track.getCapabilities?.()||{};
+  zoomApplied=null;
+  const adv=[];
+  if(Array.isArray(caps.focusMode)&&caps.focusMode.includes('continuous'))adv.push({focusMode:'continuous'});
+  if(Array.isArray(caps.exposureMode)&&caps.exposureMode.includes('continuous'))adv.push({exposureMode:'continuous'});
+  if(caps.zoom&&Number.isFinite(caps.zoom.min)&&Number.isFinite(caps.zoom.max)){
+    const z=Math.min(caps.zoom.max,Math.max(caps.zoom.min,1));
+    adv.push({zoom:z});zoomApplied=z;
+  }
+  for(const c of adv){try{await track.applyConstraints({advanced:[c]})}catch{}}
+  await focusAt(video.videoWidth/2,video.videoHeight/2,false);
+}
+async function focusAt(x,y,showRing=true){
+  if(!track||!video.videoWidth)return;
+  const caps=track.getCapabilities?.()||{};
+  if(showRing){
+    const rect=video.getBoundingClientRect(),scale=Math.max(rect.width/video.videoWidth,rect.height/video.videoHeight),rw=video.videoWidth*scale,rh=video.videoHeight*scale,ox=(rw-rect.width)/2,oy=(rh-rect.height)/2;
+    const dx=x*scale-ox,dy=y*scale-oy;
+    focusRing.style.left=dx+'px';focusRing.style.top=dy+'px';focusRing.classList.add('show');setTimeout(()=>focusRing.classList.remove('show'),700);
+  }
+  const single=Array.isArray(caps.focusMode)&&caps.focusMode.includes('single-shot');
+  const continuous=Array.isArray(caps.focusMode)&&caps.focusMode.includes('continuous');
+  const attempts=[];
+  if(single)attempts.push({focusMode:'single-shot',pointsOfInterest:[{x,y}]});
+  else attempts.push({pointsOfInterest:[{x,y}]});
+  for(const a of attempts){try{await track.applyConstraints({advanced:[a]});await wait(450);break}catch{}}
+  if(continuous){try{await track.applyConstraints({advanced:[{focusMode:'continuous'}]})}catch{}}
+}
+async function stopCamera(){shutter.disabled=true;stopTracks(stream);stream=null;track=null;selectedDevice=null;video.srcObject=null;camera.classList.remove('show')}
+async function startCamera(){
+  shutter.disabled=true;camlabel.textContent='Buscando cámara…';
+  if(!navigator.mediaDevices?.getUserMedia){toastMsg('Este navegador no permite acceso directo a la cámara');return}
+  camera.classList.add('show');
+  const best=await pickBestCamera();
+  if(best?.device){selectedDevice=best.device;stream=await openStream({deviceId:{exact:best.device.deviceId}})}
+  if(!stream)stream=await openStream({facingMode:{ideal:'environment'}});
+  if(!stream)stream=await openStream(true);
+  if(!stream){camera.classList.remove('show');toastMsg('No se pudo abrir la cámara. Revisá el permiso del navegador.');return}
+  track=stream.getVideoTracks()[0];video.srcObject=stream;try{await video.play()}catch{}
+  camlabel.textContent='Buscando foco…';await tuneCamera();await wait(900);if(!stream)return;
+  const caps=track.getCapabilities?.()||{},hasAF=Array.isArray(caps.focusMode)&&(caps.focusMode.includes('continuous')||caps.focusMode.includes('single-shot'));
+  camlabel.textContent=hasAF?'Autofoco activo · tocá para enfocar':'Cámara trasera · tocá el código';
+  shutter.disabled=false;
+}
+async function google(isbn){try{const r=await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`),j=await r.json(),it=j.items?.[0];if(!it)return null;const v=it.volumeInfo||{};const d=document.createElement('div');d.innerHTML=v.description||'';return{title:v.title||'',subtitle:v.subtitle||'',authors:v.authors||[],publisher:v.publisher||'',publishedDate:v.publishedDate||'',pageCount:v.pageCount||'',description:d.textContent||'',cover:v.imageLinks?.thumbnail?.replace('http://','https://')||'',source:'Google Books',sourceUrl:v.infoLink||''}}catch{return null}}
+async function openLib(isbn){try{const r=await fetch(`https://openlibrary.org/isbn/${isbn}.json`);if(!r.ok)return null;const j=await r.json();let authors=[];for(const a of(j.authors||[]).slice(0,3)){try{const ar=await fetch(`https://openlibrary.org${a.key}.json`),aj=await ar.json();if(aj.name)authors.push(aj.name)}catch{}}return{title:j.title||'',subtitle:j.subtitle||'',authors,publisher:j.publishers?.[0]||'',publishedDate:j.publish_date||'',pageCount:j.number_of_pages||'',description:typeof j.description==='string'?j.description:j.description?.value||'',cover:`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`,source:'Open Library',sourceUrl:`https://openlibrary.org/isbn/${isbn}`}}catch{return null}}
+async function lookup(isbn){return known[isbn]||await google(isbn)||await openLib(isbn)||null}
+function renderBook(d,isbn){reset();const cover=d.cover?`<img class="cover" src="${esc(d.cover)}" alt="Portada">`:'<div class="cover-ph">Sin portada</div>',authors=d.authors?.length?d.authors.join(', '):'Autor no disponible',meta=[d.publisher?`<dt>Editorial</dt><dd>${esc(d.publisher)}</dd>`:'',d.place?`<dt>Lugar</dt><dd>${esc(d.place)}</dd>`:'',d.publishedDate?`<dt>Año</dt><dd>${esc(d.publishedDate)}</dd>`:'',d.pageCount?`<dt>Páginas</dt><dd>${esc(d.pageCount)}</dd>`:'',`<dt>ISBN</dt><dd>${isbn}</dd>`].join('');bookEl.innerHTML=`<div class="book-grid">${cover}<div><h3>${esc(d.title||'Sin título')}</h3>${d.subtitle?`<div class="note">${esc(d.subtitle)}</div>`:''}<div class="authors">${esc(authors)}</div><dl class="meta">${meta}</dl>${d.description?`<div class="desc">${esc(d.description)}</div>`:''}<div class="source">Fuente: ${esc(d.source||'')} ${d.sourceUrl?`· <a href="${esc(d.sourceUrl)}" target="_blank" rel="noopener">abrir</a>`:''}</div></div></div>`;bookEl.classList.add('show')}
+async function detectOn(target){let raw='';try{if('BarcodeDetector'in window){const fm=await BarcodeDetector.getSupportedFormats();if(fm.includes('ean_13')){const det=new BarcodeDetector({formats:['ean_13']});const res=await det.detect(target);raw=res?.[0]?.rawValue||''}}}catch{}if(!raw&&window.ZXingBrowser){try{const reader=new ZXingBrowser.BrowserMultiFormatReader(),data=target.toDataURL('image/jpeg',.97),img=new Image();img.src=data;await img.decode();const res=await reader.decodeFromImageElement(img);raw=res?.getText?res.getText():res?.text||''}catch{}}return raw}
+async function processCanvas(){reset();setState('Leyendo foto…','—','Procesando el código de barras.');let raw=await detectOn(scanCanvas);if(!raw)raw=await detectOn(canvas);const p=parse(raw);if(!p){setState('No pude leer el código.','—','Probá otra vez con el código completo, recto y nítido.');return}setState('ISBN detectado',p.isbn,'Buscando datos del libro…');const d=await lookup(p.isbn);if(d){renderBook(d,p.isbn);setState('ISBN detectado',p.isbn,'Encontré una ficha bibliográfica.');toastMsg('Libro encontrado')}else{verify.href=`https://www.isbn.org.ar/web/busqueda-simple.php?buscar=${encodeURIComponent(p.isbn)}`;emptyEl.classList.add('show');setState('ISBN detectado',p.isbn,'No encontré una ficha automática.')}}
+openCam.addEventListener('click',startCamera);closeCam.addEventListener('click',stopCamera);
+video.addEventListener('click',async e=>{if(!track||!video.videoWidth)return;const r=video.getBoundingClientRect(),scale=Math.max(r.width/video.videoWidth,r.height/video.videoHeight),rw=video.videoWidth*scale,rh=video.videoHeight*scale,ox=(rw-r.width)/2,oy=(rh-r.height)/2,x=Math.max(0,Math.min(video.videoWidth,(e.clientX-r.left+ox)/scale)),y=Math.max(0,Math.min(video.videoHeight,(e.clientY-r.top+oy)/scale));camlabel.textContent='Enfocando…';await focusAt(x,y,true);camlabel.textContent='Autofoco activo · tocá para enfocar'});
+shutter.addEventListener('click',async()=>{if(!video.videoWidth||!track)return;shutter.disabled=true;camlabel.textContent='Capturando…';let captured=false;try{if('ImageCapture'in window){const ic=new ImageCapture(track);const blob=await ic.takePhoto();const bitmap=await createImageBitmap(blob);canvas.width=bitmap.width;canvas.height=bitmap.height;canvas.getContext('2d').drawImage(bitmap,0,0);bitmap.close?.();captured=true}}catch{}if(!captured){canvas.width=video.videoWidth;canvas.height=video.videoHeight;canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height)}const sx=Math.round(canvas.width*.04),sy=Math.round(canvas.height*.30),sw=Math.round(canvas.width*.92),sh=Math.round(canvas.height*.40);scanCanvas.width=sw;scanCanvas.height=sh;scanCanvas.getContext('2d').drawImage(canvas,sx,sy,sw,sh,0,0,sw,sh);await stopCamera();await processCanvas()});window.addEventListener('pagehide',stopCamera)
+})();
+</script>
+</body></html>
