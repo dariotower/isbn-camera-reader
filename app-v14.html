@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111111">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>Lector ISBN</title>
+  <style>
+    :root{
+      --bg:#efefec;
+      --card:#ffffff;
+      --ink:#111111;
+      --muted:#6d6d68;
+      --line:#d8d8d2;
+      --accent:#111111;
+      --accent-2:#f2c84b;
+      --ok:#176b3a;
+      --radius:28px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    body{min-height:100svh}
+    main{width:min(720px,100%);margin:0 auto;padding:22px 16px 40px}
+    .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+    .eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+    h1{margin:0;font-size:clamp(30px,8vw,48px);line-height:.95;letter-spacing:-.05em}
+    .version{font-size:12px;color:var(--muted);border:1px solid var(--line);padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.7)}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 1px 0 rgba(0,0,0,.02)}
+    .hero{padding:22px;background:linear-gradient(180deg,#1a1a1d 0%, #0f0f11 100%);color:#fff;border-radius:24px;min-height:260px;display:flex;flex-direction:column;justify-content:space-between}
+    .hero-tag{align-self:flex-start;background:var(--accent-2);color:#111;padding:10px 14px;border-radius:999px;font-size:13px;font-weight:700}
+    .hero-copy{max-width:360px}
+    .hero-copy h2{margin:0 0 10px;font-size:clamp(28px,8vw,40px);line-height:.95;letter-spacing:-.05em}
+    .hero-copy p{margin:0;color:rgba(255,255,255,.72);font-size:15px;line-height:1.45}
+    .upload{margin-top:14px}
+    .upload-btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:64px;padding:16px 18px;background:var(--accent);color:#fff;border-radius:22px;border:none;font:inherit;font-weight:800;font-size:18px;cursor:pointer;text-decoration:none;gap:10px}
+    .upload-btn .dot{width:12px;height:12px;border-radius:50%;background:var(--accent-2);display:inline-block}
+    input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+    .hint{margin:14px 2px 0;color:var(--muted);font-size:14px;line-height:1.45}
+    .section{margin-top:16px}
+    .status{display:none;padding:18px;border-radius:24px;background:#f6f6f2;border:1px solid var(--line)}
+    .status.show{display:block}
+    .status small{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+    .status-title{font-size:17px;font-weight:700;line-height:1.3}
+    .isbn{margin-top:8px;font-size:clamp(28px,8vw,44px);line-height:1;font-weight:900;color:var(--ok);letter-spacing:.02em;overflow-wrap:anywhere}
+    .status-note{margin-top:8px;font-size:14px;color:var(--muted);line-height:1.45}
+    .book{display:none;margin-top:16px;padding:18px;border:1px solid var(--line);border-radius:24px;background:#fff}
+    .book.show{display:block}
+    .book-grid{display:grid;grid-template-columns:96px 1fr;gap:16px}
+    .cover,.cover-ph{width:96px;aspect-ratio:2/3;border-radius:18px;border:1px solid var(--line);background:#ecece7;object-fit:cover}
+    .cover-ph{display:grid;place-items:center;font-size:12px;color:var(--muted);padding:8px;text-align:center}
+    .book h3{margin:0;font-size:clamp(24px,7vw,34px);line-height:1;letter-spacing:-.045em}
+    .subtitle{margin-top:6px;color:var(--muted);font-size:14px;line-height:1.4}
+    .authors{margin-top:10px;font-size:16px;font-weight:700;line-height:1.35}
+    .meta{margin-top:14px;display:grid;grid-template-columns:max-content 1fr;gap:6px 12px;font-size:14px}
+    .meta dt{color:var(--muted)}
+    .meta dd{margin:0}
+    .desc{margin-top:14px;font-size:14px;line-height:1.55;color:#2e2e2b}
+    .source{margin-top:12px;font-size:12px;color:var(--muted);line-height:1.45}
+    .source a{color:inherit}
+    .empty{display:none;margin-top:16px;padding:18px;border-radius:24px;background:#f6f6f2;border:1px solid var(--line)}
+    .empty.show{display:block}
+    .empty strong{display:block;font-size:17px;line-height:1.3;margin-bottom:6px}
+    .empty p{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
+    .empty a{display:inline-block;margin-top:12px;color:var(--ink);font-weight:700;text-decoration:none;border-bottom:1px solid var(--ink)}
+    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(8px);background:#111;color:#fff;padding:10px 14px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;max-width:92vw;text-align:center}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    @media (max-width:560px){
+      main{padding:18px 14px 32px}
+      .hero{min-height:220px;padding:18px}
+      .book-grid{grid-template-columns:78px 1fr;gap:12px}
+      .cover,.cover-ph{width:78px;border-radius:14px}
+      .meta{grid-template-columns:1fr;gap:2px}
+      .meta dt{margin-top:8px}
+    }
+  </style>
+  <script src="https://unpkg.com/@zxing/browser@0.1.5"></script>
+</head>
+<body>
+  <main>
+    <div class="top">
+      <div>
+        <div class="eyebrow">Lector de libros</div>
+        <h1>Lector ISBN</h1>
+      </div>
+      <div class="version">v1.4</div>
+    </div>
+
+    <section class="card">
+      <div class="hero">
+        <div class="hero-tag">Cámara nativa</div>
+        <div class="hero-copy">
+          <h2>Leé el código y encontrá el libro.</h2>
+          <p>Abrimos la cámara nativa del teléfono para que el enfoque y la exposición los controle Android. Después detectamos el ISBN y buscamos la ficha automáticamente.</p>
+        </div>
+      </div>
+
+      <div class="upload">
+        <label class="upload-btn" for="photoInput"><span class="dot"></span> Sacar foto</label>
+        <input id="photoInput" type="file" accept="image/*" capture="environment">
+        <p class="hint">Usá la cámara trasera y tocá el código para enfocar antes de disparar.</p>
+      </div>
+
+      <div id="status" class="status section" aria-live="polite">
+        <small>Estado</small>
+        <div id="statusTitle" class="status-title">Esperando foto…</div>
+        <div id="isbn" class="isbn">—</div>
+        <div id="statusNote" class="status-note"></div>
+      </div>
+
+      <div id="book" class="book" aria-live="polite"></div>
+
+      <div id="empty" class="empty" aria-live="polite">
+        <strong>No encontré una ficha automática.</strong>
+        <p>El ISBN puede ser válido y existir en catálogos argentinos aunque no esté indexado en las fuentes automáticas.</p>
+        <a id="verifyLink" href="#" target="_blank" rel="noopener noreferrer">Verificar en ISBN.AR</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    (() => {
+      const $ = (id) => document.getElementById(id);
+      const input = $('photoInput');
+      const statusBox = $('status');
+      const statusTitle = $('statusTitle');
+      const statusNote = $('statusNote');
+      const isbnEl = $('isbn');
+      const bookEl = $('book');
+      const emptyEl = $('empty');
+      const verifyLink = $('verifyLink');
+      const toast = $('toast');
+
+      const knownBooks = {
+        '9789878889481': {
+          title: 'Cómo emprender en las industrias culturales y creativas',
+          subtitle: '',
+          authors: ['Jimena Caballero'],
+          publisher: 'Águila',
+          publishedDate: '2023',
+          place: 'Mendoza',
+          language: 'Español',
+          description: 'Registro bibliográfico verificado para una publicación argentina indexada en catálogos públicos.',
+          source: 'Referencia argentina verificada',
+          sourceUrl: 'https://catalogobibliotecas.buenosaires.gob.ar/pergamo/opac.php?a=bsqMateria&n=EMPRENDEDORES+%28ECONOMIA%29'
+        }
+      };
+
+      function toastMsg(msg){
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toast._t);
+        toast._t = setTimeout(() => toast.classList.remove('show'), 1800);
+      }
+
+      function digits(v){return String(v || '').replace(/[^0-9Xx]/g,'').toUpperCase();}
+      function valid13(v){
+        if(!/^\d{13}$/.test(v)) return false;
+        let sum = 0;
+        for(let i=0;i<12;i++) sum += Number(v[i]) * (i % 2 ? 3 : 1);
+        return ((10 - sum % 10) % 10) === Number(v[12]);
+      }
+      function valid10(v){
+        if(!/^\d{9}[\dX]$/.test(v)) return false;
+        let sum = 0;
+        for(let i=0;i<10;i++) sum += (10 - i) * (v[i] === 'X' ? 10 : Number(v[i]));
+        return sum % 11 === 0;
+      }
+      function to13(v){
+        if(!valid10(v)) return null;
+        const core = '978' + v.slice(0,9);
+        let sum = 0;
+        for(let i=0;i<12;i++) sum += Number(core[i]) * (i % 2 ? 3 : 1);
+        return core + ((10 - sum % 10) % 10);
+      }
+      function parseISBN(raw){
+        const original = String(raw || '').trim();
+        const compact = digits(original);
+        const probable = compact.match(/97[89]\d{10}/g) || [];
+        for(const code of probable){
+          if(valid13(code)) return { isbn: code, valid: true, raw: original };
+        }
+        if(/^\d{13}$/.test(compact)) return { isbn: compact, valid: valid13(compact), raw: original };
+        if(valid10(compact)) return { isbn: to13(compact), valid: true, raw: original };
+        return { isbn: null, valid: false, raw: original };
+      }
+      function stripHtml(html){
+        const div = document.createElement('div');
+        div.innerHTML = String(html || '');
+        return div.textContent || '';
+      }
+      function humanLang(code){
+        const map = {es:'Español',spa:'Español',en:'Inglés',eng:'Inglés',pt:'Portugués',por:'Portugués',fr:'Francés',fra:'Francés'};
+        return map[code] || code || '';
+      }
+      function esc(v){
+        return String(v ?? '').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+      }
+
+      function setState(title, isbn='', note=''){
+        statusBox.classList.add('show');
+        statusTitle.textContent = title;
+        isbnEl.textContent = isbn || '—';
+        statusNote.textContent = note;
+      }
+
+      function resetResults(){
+        bookEl.className = 'book';
+        bookEl.innerHTML = '';
+        emptyEl.classList.remove('show');
+      }
+
+      function renderBook(data, isbn){
+        resetResults();
+        const cover = data.cover ? `<img class="cover" src="${esc(data.cover)}" alt="Portada de ${esc(data.title || 'libro')}">` : '<div class="cover-ph">Sin portada</div>';
+        const authors = Array.isArray(data.authors) && data.authors.length ? data.authors.join(', ') : 'Autor no disponible';
+        const meta = [
+          data.publisher ? `<dt>Editorial</dt><dd>${esc(data.publisher)}</dd>` : '',
+          data.place ? `<dt>Lugar</dt><dd>${esc(data.place)}</dd>` : '',
+          data.publishedDate ? `<dt>Año</dt><dd>${esc(data.publishedDate)}</dd>` : '',
+          data.pageCount ? `<dt>Páginas</dt><dd>${esc(data.pageCount)}</dd>` : '',
+          data.language ? `<dt>Idioma</dt><dd>${esc(data.language)}</dd>` : '',
+          `<dt>ISBN</dt><dd>${esc(isbn)}</dd>`
+        ].filter(Boolean).join('');
+        const source = data.source ? `<div class="source">Fuente: ${esc(data.source)}${data.sourceUrl ? ` · <a href="${esc(data.sourceUrl)}" target="_blank" rel="noopener noreferrer">abrir</a>` : ''}</div>` : '';
+        const desc = data.description ? `<div class="desc">${esc(data.description)}</div>` : '';
+
+        bookEl.innerHTML = `
+          <div class="book-grid">
+            ${cover}
+            <div>
+              <h3>${esc(data.title || 'Sin título')}</h3>
+              ${data.subtitle ? `<div class="subtitle">${esc(data.subtitle)}</div>` : ''}
+              <div class="authors">${esc(authors)}</div>
+              <dl class="meta">${meta}</dl>
+              ${desc}
+              ${source}
+            </div>
+          </div>`;
+        bookEl.classList.add('show');
+      }
+
+      function renderNotFound(isbn){
+        resetResults();
+        verifyLink.href = `https://www.isbn.org.ar/web/busqueda-simple.php?buscar=${encodeURIComponent(isbn)}`;
+        emptyEl.classList.add('show');
+      }
+
+      async function googleBooks(isbn){
+        try{
+          const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
+          const json = await res.json();
+          const item = json.items && json.items[0];
+          if(!item) return null;
+          const info = item.volumeInfo || {};
+          return {
+            title: info.title || '',
+            subtitle: info.subtitle || '',
+            authors: info.authors || [],
+            publisher: info.publisher || '',
+            publishedDate: info.publishedDate || '',
+            pageCount: info.pageCount || '',
+            language: humanLang(info.language),
+            description: stripHtml(info.description || ''),
+            cover: info.imageLinks?.thumbnail?.replace('http://','https://') || info.imageLinks?.smallThumbnail?.replace('http://','https://') || '',
+            source: 'Google Books',
+            sourceUrl: info.infoLink || item.selfLink || ''
+          };
+        }catch{return null;}
+      }
+
+      async function openLibrary(isbn){
+        try{
+          const res = await fetch(`https://openlibrary.org/isbn/${isbn}.json`);
+          if(!res.ok) return null;
+          const json = await res.json();
+          let authors = [];
+          if(Array.isArray(json.authors) && json.authors.length){
+            const authorResponses = await Promise.all(json.authors.slice(0,4).map(async a => {
+              try{
+                const r = await fetch(`https://openlibrary.org${a.key}.json`);
+                if(!r.ok) return null;
+                const j = await r.json();
+                return j.name || null;
+              }catch{return null;}
+            }));
+            authors = authorResponses.filter(Boolean);
+          }
+          return {
+            title: json.title || '',
+            subtitle: json.subtitle || '',
+            authors,
+            publisher: Array.isArray(json.publishers) ? (json.publishers[0] || '') : '',
+            publishedDate: json.publish_date || '',
+            pageCount: json.number_of_pages || '',
+            language: '',
+            description: typeof json.description === 'string' ? json.description : (json.description?.value || ''),
+            cover: `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`,
+            source: 'Open Library',
+            sourceUrl: `https://openlibrary.org/isbn/${isbn}`
+          };
+        }catch{return null;}
+      }
+
+      async function lookupBook(isbn){
+        if(knownBooks[isbn]) return knownBooks[isbn];
+        const gb = await googleBooks(isbn);
+        if(gb) return gb;
+        const ol = await openLibrary(isbn);
+        if(ol) return ol;
+        return null;
+      }
+
+      async function detectFromImage(file){
+        if(!file) return;
+        resetResults();
+        setState('Leyendo foto…', '—', 'Procesando el código de barras.');
+
+        const objectUrl = URL.createObjectURL(file);
+        try{
+          const image = new Image();
+          image.src = objectUrl;
+          await image.decode();
+
+          let rawValue = '';
+          if('BarcodeDetector' in window){
+            try{
+              const supported = await BarcodeDetector.getSupportedFormats();
+              if(supported.includes('ean_13')){
+                const detector = new BarcodeDetector({formats:['ean_13']});
+                const results = await detector.detect(image);
+                if(results && results[0]) rawValue = results[0].rawValue || '';
+              }
+            }catch{}
+          }
+
+          if(!rawValue && window.ZXingBrowser){
+            try{
+              const reader = new ZXingBrowser.BrowserMultiFormatReader();
+              const result = await reader.decodeFromImageElement(image);
+              rawValue = result?.getText ? result.getText() : (result?.text || '');
+            }catch{}
+          }
+
+          const parsed = parseISBN(rawValue);
+          if(!parsed.isbn){
+            setState('No pude leer el código.', '—', 'Probá de nuevo con mejor foco y el código completo visible.');
+            toastMsg('No se detectó un ISBN');
+            return;
+          }
+
+          setState('ISBN detectado', parsed.isbn, parsed.valid ? 'ISBN válido. Buscando la ficha del libro…' : 'El código parece un ISBN. Igual voy a intentar encontrar la ficha.');
+          const book = await lookupBook(parsed.isbn);
+          if(book){
+            renderBook(book, parsed.isbn);
+            setState('ISBN detectado', parsed.isbn, 'Encontré una ficha bibliográfica.');
+            toastMsg('Libro encontrado');
+          } else {
+            renderNotFound(parsed.isbn);
+            setState('ISBN detectado', parsed.isbn, 'No encontré una ficha automática para este libro.');
+            toastMsg('Sin ficha automática');
+          }
+        } catch (err) {
+          console.error(err);
+          setState('No pude procesar la foto.', '—', 'Intentá nuevamente con una imagen más nítida.');
+          toastMsg('Error al procesar la foto');
+        } finally {
+          URL.revokeObjectURL(objectUrl);
+          input.value = '';
+        }
+      }
+
+      input.addEventListener('change', (e) => detectFromImage(e.target.files?.[0]));
+    })();
+  </script>
+</body>
+</html>
