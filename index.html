@@ -7,27 +7,136 @@
   <title>Lector ISBN</title>
   <style>
     :root{--bg:#f4f4f1;--card:#fff;--ink:#111;--muted:#6c6c66;--line:#dadad4;--accent:#111;--good:#1d6b3c;--bad:#a62d2d;--radius:20px}
-    *{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}main{width:min(760px,100%);margin:auto;padding:18px 16px 48px}header{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:4px 2px 18px}h1{font-size:clamp(28px,7vw,44px);letter-spacing:-.04em;line-height:.95;margin:0}.eyebrow{font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}.camera{position:relative;background:#111;aspect-ratio:4/3;min-height:260px}video{width:100%;height:100%;object-fit:cover;display:block}.guide{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,.18),transparent 25%,transparent 75%,rgba(0,0,0,.18))}.frame{width:min(84%,560px);height:32%;border:2px solid rgba(255,255,255,.92);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);position:relative}.frame:after{content:"";position:absolute;left:8%;right:8%;top:50%;height:2px;background:rgba(255,255,255,.55)}.camera-status{position:absolute;left:12px;top:12px;padding:8px 10px;border-radius:999px;background:rgba(0,0,0,.62);color:#fff;font-size:12px;backdrop-filter:blur(8px)}.controls{display:flex;flex-wrap:wrap;gap:10px;padding:14px}button,.file-label{min-height:46px;border-radius:13px;border:1px solid var(--line);background:#fff;color:var(--ink);font:inherit;font-weight:650;padding:0 15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}button.primary{background:var(--accent);color:#fff;border-color:var(--accent);flex:1}button:disabled{opacity:.45;cursor:not-allowed}.file-label{cursor:pointer}input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.result{padding:18px;border-top:1px solid var(--line);display:grid;gap:8px}.result small{color:var(--muted)}.isbn{font-size:clamp(25px,7vw,40px);line-height:1;font-weight:800;letter-spacing:.02em;overflow-wrap:anywhere}.valid{color:var(--good)}.invalid{color:var(--bad)}.result-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}.section{margin-top:18px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 9px}h2{font-size:18px;margin:0}.history{list-style:none;margin:0;padding:0}.history li{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid var(--line)}.history li:first-child{border-top:0}.history .num{font-weight:750;letter-spacing:.02em}.history .time{font-size:12px;color:var(--muted);margin-top:3px}.empty{padding:18px;color:var(--muted)}.note{font-size:13px;line-height:1.5;color:var(--muted);padding:0 3px;margin-top:12px}.toast{position:sticky;bottom:12px;width:max-content;max-width:95%;margin:12px auto 0;background:#111;color:#fff;padding:10px 13px;border-radius:999px;font-size:13px;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:none}@media(max-width:480px){main{padding-left:10px;padding-right:10px}.camera{min-height:230px}.controls>*{flex:1 1 calc(50% - 8px)}}
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}main{width:min(760px,100%);margin:auto;padding:18px 12px 48px}header{margin:4px 2px 18px}h1{font-size:clamp(28px,7vw,44px);letter-spacing:-.04em;line-height:.95;margin:0}.eyebrow{font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}.camera{position:relative;background:#111;aspect-ratio:16/10;min-height:245px}video{width:100%;height:100%;object-fit:cover;display:block}.guide{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}.frame{width:90%;height:42%;border:2px solid rgba(255,255,255,.96);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.28);position:relative}.frame:after{content:"";position:absolute;left:5%;right:5%;top:50%;height:2px;background:rgba(255,255,255,.7)}.frame-label{position:absolute;left:50%;bottom:-34px;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,.62);padding:6px 9px;border-radius:999px;font-size:12px;white-space:nowrap}.camera-status{position:absolute;left:10px;top:10px;max-width:calc(100% - 20px);padding:8px 10px;border-radius:999px;background:rgba(0,0,0,.68);color:#fff;font-size:12px;backdrop-filter:blur(8px)}.controls{display:flex;flex-wrap:wrap;gap:10px;padding:14px}button,.file-label{min-height:46px;border-radius:13px;border:1px solid var(--line);background:#fff;color:var(--ink);font:inherit;font-weight:650;padding:0 15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}button.primary{background:var(--accent);color:#fff;border-color:var(--accent);flex:1}button:disabled{opacity:.45;cursor:not-allowed}.file-label{cursor:pointer}input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.zoom-wrap{display:none;padding:0 14px 14px;gap:10px;align-items:center}.zoom-wrap.show{display:flex}.zoom-wrap label{font-size:13px;font-weight:700;white-space:nowrap}.zoom-wrap input{width:100%}.zoom-value{font-size:12px;color:var(--muted);min-width:34px;text-align:right}.tip{margin:0 14px 14px;padding:11px 12px;background:#f2f2ee;border-radius:12px;color:var(--muted);font-size:13px;line-height:1.4}.result{padding:18px;border-top:1px solid var(--line);display:grid;gap:8px}.result small{color:var(--muted)}.isbn{font-size:clamp(25px,7vw,40px);line-height:1;font-weight:800;letter-spacing:.02em;overflow-wrap:anywhere}.valid{color:var(--good)}.invalid{color:var(--bad)}.result-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}.section{margin-top:18px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 9px}h2{font-size:18px;margin:0}.history{list-style:none;margin:0;padding:0}.history li{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid var(--line)}.history li:first-child{border-top:0}.history .num{font-weight:750;letter-spacing:.02em}.history .time{font-size:12px;color:var(--muted);margin-top:3px}.empty{padding:18px;color:var(--muted)}.note{font-size:13px;line-height:1.5;color:var(--muted);padding:0 3px;margin-top:12px}.toast{position:sticky;bottom:12px;width:max-content;max-width:95%;margin:12px auto 0;background:#111;color:#fff;padding:10px 13px;border-radius:999px;font-size:13px;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:none}@media(max-width:480px){.controls>*{flex:1 1 calc(50% - 8px)}.camera{min-height:230px}}
   </style>
   <script src="https://unpkg.com/@zxing/browser@0.1.5"></script>
 </head>
 <body>
 <main>
-  <header><div><div class="eyebrow">Escáner de libros</div><h1>Lector ISBN</h1></div></header>
+  <header><div class="eyebrow">Escáner de libros</div><h1>Lector ISBN</h1></header>
   <section class="card">
-    <div class="camera"><video id="video" playsinline muted></video><div class="guide"><div class="frame"></div></div><div class="camera-status" id="cameraStatus">Cámara detenida</div></div>
-    <div class="controls"><button class="primary" id="startBtn">Abrir cámara</button><button id="stopBtn" disabled>Detener</button><button id="torchBtn" disabled>Linterna</button><label class="file-label" for="imageInput">Leer foto</label><input type="file" id="imageInput" accept="image/*" capture="environment"></div>
+    <div class="camera">
+      <video id="video" playsinline muted></video>
+      <div class="guide"><div class="frame"><div class="frame-label">Código completo dentro del recuadro</div></div></div>
+      <div class="camera-status" id="cameraStatus">Cámara detenida</div>
+    </div>
+    <div class="controls">
+      <button class="primary" id="startBtn">Abrir cámara</button>
+      <button id="stopBtn" disabled>Detener</button>
+      <button id="torchBtn" disabled>Linterna</button>
+      <label class="file-label" for="imageInput">Leer foto</label>
+      <input type="file" id="imageInput" accept="image/*" capture="environment">
+    </div>
+    <div class="zoom-wrap" id="zoomWrap"><label for="zoomRange">Zoom</label><input id="zoomRange" type="range" min="1" max="1" step="0.1" value="1"><span class="zoom-value" id="zoomValue">1×</span></div>
+    <p class="tip">Mejor resultado: mantené el libro a unos 20–35 cm, evitá acercarlo hasta que pierda foco y usá el zoom si el código queda pequeño.</p>
     <div class="result" aria-live="polite"><small>Última lectura</small><div class="isbn" id="isbnResult">—</div><div id="validationText">Apuntá al código de barras del libro.</div><div class="result-actions"><button id="copyBtn" disabled>Copiar ISBN</button><button id="clearBtn">Limpiar</button></div></div>
   </section>
   <section class="section">
     <div class="section-head"><h2>Historial</h2><div><button id="exportBtn">CSV</button><button id="clearHistoryBtn">Vaciar</button></div></div>
     <div class="card"><ul class="history" id="history"></ul><div class="empty" id="emptyHistory">Todavía no escaneaste ningún ISBN.</div></div>
-    <p class="note">Para usar la cámara desde el navegador, abrí esta página desde <strong>HTTPS</strong> o <strong>localhost</strong>. El lector acepta ISBN-13 válidos que comiencen en 978 o 979.</p>
+    <p class="note">Usa el detector nativo del navegador para EAN‑13 cuando está disponible y ZXing como respaldo. La cámara requiere HTTPS.</p>
   </section>
   <div class="toast" id="toast" role="status"></div>
 </main>
 <script>
-(()=>{const video=document.getElementById('video'),startBtn=document.getElementById('startBtn'),stopBtn=document.getElementById('stopBtn'),torchBtn=document.getElementById('torchBtn'),imageInput=document.getElementById('imageInput'),cameraStatus=document.getElementById('cameraStatus'),isbnResult=document.getElementById('isbnResult'),validationText=document.getElementById('validationText'),copyBtn=document.getElementById('copyBtn'),clearBtn=document.getElementById('clearBtn'),historyEl=document.getElementById('history'),emptyHistory=document.getElementById('emptyHistory'),exportBtn=document.getElementById('exportBtn'),clearHistoryBtn=document.getElementById('clearHistoryBtn'),toast=document.getElementById('toast');let controls=null,reader=null,currentISBN='',torchOn=false,lastAccepted={value:'',at:0};const STORAGE_KEY='isbn-reader-history-v1';function showToast(msg){toast.textContent=msg;toast.classList.add('show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove('show'),1800)}function normalizeCode(raw){return String(raw||'').replace(/\D/g,'')}function isValidISBN13(code){if(!/^\d{13}$/.test(code))return false;const sum=code.split('').reduce((acc,digit,i)=>acc+Number(digit)*(i%2===0?1:3),0);return sum%10===0}function isBookISBN(code){return(code.startsWith('978')||code.startsWith('979'))&&isValidISBN13(code)}function setResult(code,source='cámara'){const clean=normalizeCode(code);if(!/^\d{13}$/.test(clean)){isbnResult.textContent=clean||'—';isbnResult.className='isbn invalid';validationText.textContent='Se detectó un código, pero no es un EAN-13 de 13 dígitos.';currentISBN='';copyBtn.disabled=true;return}if(!isBookISBN(clean)){isbnResult.textContent=clean;isbnResult.className='isbn invalid';validationText.textContent=clean.startsWith('978')||clean.startsWith('979')?'El número parece ISBN, pero el dígito de control no es válido.':'EAN-13 detectado, pero no corresponde al prefijo ISBN 978/979.';currentISBN='';copyBtn.disabled=true;return}const now=Date.now();if(lastAccepted.value===clean&&now-lastAccepted.at<2500)return;lastAccepted={value:clean,at:now};currentISBN=clean;isbnResult.textContent=clean;isbnResult.className='isbn valid';validationText.textContent=`ISBN-13 válido · leído desde ${source}`;copyBtn.disabled=false;addHistory(clean);if(navigator.vibrate)navigator.vibrate(80);showToast('ISBN detectado')}function getHistory(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||[]}catch{return[]}}function saveHistory(items){localStorage.setItem(STORAGE_KEY,JSON.stringify(items.slice(0,200)));renderHistory()}function addHistory(isbn){const items=getHistory();items.unshift({isbn,timestamp:new Date().toISOString()});saveHistory(items)}function renderHistory(){const items=getHistory();historyEl.innerHTML='';emptyHistory.style.display=items.length?'none':'block';items.forEach((item,index)=>{const li=document.createElement('li'),info=document.createElement('div'),num=document.createElement('div'),time=document.createElement('div'),del=document.createElement('button');num.className='num';num.textContent=item.isbn;time.className='time';const d=new Date(item.timestamp);time.textContent=d.toLocaleString('es-AR',{dateStyle:'short',timeStyle:'short'});info.append(num,time);del.textContent='Quitar';del.type='button';del.addEventListener('click',()=>{const updated=getHistory();updated.splice(index,1);saveHistory(updated)});li.append(info,del);historyEl.append(li)})}function stopCamera(){if(controls){try{controls.stop()}catch{}controls=null}if(video.srcObject){video.srcObject.getTracks().forEach(t=>t.stop());video.srcObject=null}cameraStatus.textContent='Cámara detenida';startBtn.disabled=false;stopBtn.disabled=true;torchBtn.disabled=true;torchOn=false;torchBtn.textContent='Linterna'}async function startCamera(){if(!window.ZXingBrowser){showToast('No se pudo cargar el lector ZXing');return}stopCamera();reader=new ZXingBrowser.BrowserMultiFormatReader();try{cameraStatus.textContent='Solicitando cámara…';controls=await reader.decodeFromConstraints({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}}},video,(result)=>{if(result)setResult(result.getText?result.getText():result.text,'cámara')});cameraStatus.textContent='Buscando ISBN…';startBtn.disabled=true;stopBtn.disabled=false;const stream=video.srcObject,track=stream&&stream.getVideoTracks?stream.getVideoTracks()[0]:null,caps=track&&track.getCapabilities?track.getCapabilities():{};torchBtn.disabled=!(caps&&caps.torch)}catch(err){console.error(err);stopCamera();cameraStatus.textContent='No se pudo abrir la cámara';validationText.textContent='Revisá el permiso de cámara y asegurate de abrir la web por HTTPS o localhost.';showToast('Error al abrir la cámara')}}async function toggleTorch(){const stream=video.srcObject,track=stream&&stream.getVideoTracks?stream.getVideoTracks()[0]:null;if(!track||!track.applyConstraints)return;torchOn=!torchOn;try{await track.applyConstraints({advanced:[{torch:torchOn}]});torchBtn.textContent=torchOn?'Apagar luz':'Linterna'}catch{torchOn=false;torchBtn.textContent='Linterna';showToast('La linterna no está disponible')}}async function scanImage(file){if(!file||!window.ZXingBrowser)return;const url=URL.createObjectURL(file),img=new Image();img.onload=async()=>{try{const imageReader=new ZXingBrowser.BrowserMultiFormatReader(),result=await imageReader.decodeFromImageElement(img);setResult(result.getText?result.getText():result.text,'foto')}catch{validationText.textContent='No pude detectar un código de barras en esa imagen.';showToast('No se encontró un código')}finally{URL.revokeObjectURL(url);imageInput.value=''}};img.onerror=()=>{URL.revokeObjectURL(url);showToast('No se pudo abrir la imagen')};img.src=url}startBtn.addEventListener('click',startCamera);stopBtn.addEventListener('click',stopCamera);torchBtn.addEventListener('click',toggleTorch);imageInput.addEventListener('change',e=>scanImage(e.target.files[0]));copyBtn.addEventListener('click',async()=>{if(!currentISBN)return;try{await navigator.clipboard.writeText(currentISBN);showToast('ISBN copiado')}catch{const input=document.createElement('textarea');input.value=currentISBN;document.body.append(input);input.select();document.execCommand('copy');input.remove();showToast('ISBN copiado')}});clearBtn.addEventListener('click',()=>{currentISBN='';isbnResult.textContent='—';isbnResult.className='isbn';validationText.textContent='Apuntá al código de barras del libro.';copyBtn.disabled=true});exportBtn.addEventListener('click',()=>{const items=getHistory();if(!items.length){showToast('No hay lecturas para exportar');return}const rows=[['ISBN','Fecha']].concat(items.map(i=>[i.isbn,i.timestamp])),csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(',')).join('\n'),blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='isbn-escaneados.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});clearHistoryBtn.addEventListener('click',()=>{if(!getHistory().length)return;if(confirm('¿Vaciar todo el historial de ISBN?'))saveHistory([])});window.addEventListener('pagehide',stopCamera);renderHistory()})();
+(()=>{
+  const $=id=>document.getElementById(id);
+  const video=$('video'),startBtn=$('startBtn'),stopBtn=$('stopBtn'),torchBtn=$('torchBtn'),imageInput=$('imageInput'),cameraStatus=$('cameraStatus'),isbnResult=$('isbnResult'),validationText=$('validationText'),copyBtn=$('copyBtn'),clearBtn=$('clearBtn'),historyEl=$('history'),emptyHistory=$('emptyHistory'),exportBtn=$('exportBtn'),clearHistoryBtn=$('clearHistoryBtn'),toast=$('toast'),zoomWrap=$('zoomWrap'),zoomRange=$('zoomRange'),zoomValue=$('zoomValue');
+  let stream=null,track=null,zxingControls=null,nativeDetector=null,scanTimer=null,scanning=false,currentISBN='',torchOn=false,lastAccepted={value:'',at:0};
+  const STORAGE_KEY='isbn-reader-history-v2';
+
+  function showToast(msg){toast.textContent=msg;toast.classList.add('show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove('show'),1800)}
+  function normalizeCode(raw){return String(raw||'').replace(/\D/g,'')}
+  function isValidISBN13(code){if(!/^\d{13}$/.test(code))return false;let sum=0;for(let i=0;i<13;i++)sum+=Number(code[i])*(i%2===0?1:3);return sum%10===0}
+  function isBookISBN(code){return(code.startsWith('978')||code.startsWith('979'))&&isValidISBN13(code)}
+  function setResult(code,source='cámara'){
+    const clean=normalizeCode(code);
+    if(!/^\d{13}$/.test(clean))return;
+    if(!isBookISBN(clean))return;
+    const now=Date.now();if(lastAccepted.value===clean&&now-lastAccepted.at<2500)return;lastAccepted={value:clean,at:now};
+    currentISBN=clean;isbnResult.textContent=clean;isbnResult.className='isbn valid';validationText.textContent=`ISBN-13 válido · ${source}`;copyBtn.disabled=false;addHistory(clean);if(navigator.vibrate)navigator.vibrate(80);showToast('ISBN detectado');
+  }
+  function getHistory(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||[]}catch{return[]}}
+  function saveHistory(items){localStorage.setItem(STORAGE_KEY,JSON.stringify(items.slice(0,200)));renderHistory()}
+  function addHistory(isbn){const items=getHistory();items.unshift({isbn,timestamp:new Date().toISOString()});saveHistory(items)}
+  function renderHistory(){const items=getHistory();historyEl.innerHTML='';emptyHistory.style.display=items.length?'none':'block';items.forEach((item,index)=>{const li=document.createElement('li'),info=document.createElement('div'),num=document.createElement('div'),time=document.createElement('div'),del=document.createElement('button');num.className='num';num.textContent=item.isbn;time.className='time';time.textContent=new Date(item.timestamp).toLocaleString('es-AR',{dateStyle:'short',timeStyle:'short'});info.append(num,time);del.textContent='Quitar';del.type='button';del.addEventListener('click',()=>{const updated=getHistory();updated.splice(index,1);saveHistory(updated)});li.append(info,del);historyEl.append(li)})}
+
+  async function setupTrack(){
+    if(!track)return;
+    const caps=track.getCapabilities?track.getCapabilities():{};
+    const advanced={};
+    if(Array.isArray(caps.focusMode)&&caps.focusMode.includes('continuous'))advanced.focusMode='continuous';
+    if(Array.isArray(caps.exposureMode)&&caps.exposureMode.includes('continuous'))advanced.exposureMode='continuous';
+    if(Object.keys(advanced).length){try{await track.applyConstraints({advanced:[advanced]})}catch{}}
+    torchBtn.disabled=!(caps&&caps.torch);
+    if(caps.zoom&&Number.isFinite(caps.zoom.min)&&Number.isFinite(caps.zoom.max)&&caps.zoom.max>caps.zoom.min){
+      zoomRange.min=caps.zoom.min;zoomRange.max=caps.zoom.max;zoomRange.step=caps.zoom.step||0.1;
+      const defaultZoom=Math.min(caps.zoom.max,Math.max(caps.zoom.min,1));zoomRange.value=defaultZoom;zoomValue.textContent=Number(defaultZoom).toFixed(1).replace('.0','')+'×';zoomWrap.classList.add('show');
+    }else zoomWrap.classList.remove('show');
+  }
+
+  async function initNativeDetector(){
+    nativeDetector=null;
+    if(!('BarcodeDetector' in window))return false;
+    try{
+      const formats=await BarcodeDetector.getSupportedFormats();
+      if(!formats.includes('ean_13'))return false;
+      nativeDetector=new BarcodeDetector({formats:['ean_13']});
+      return true;
+    }catch{return false}
+  }
+
+  async function nativeScanLoop(){
+    if(!scanning||!nativeDetector||video.readyState<2){scanTimer=setTimeout(nativeScanLoop,120);return}
+    try{
+      const codes=await nativeDetector.detect(video);
+      if(codes&&codes.length){for(const code of codes){if(code.format==='ean_13'||!code.format)setResult(code.rawValue,'detector nativo')}}
+    }catch{}
+    if(scanning)scanTimer=setTimeout(nativeScanLoop,120);
+  }
+
+  async function startZXingFallback(){
+    if(!window.ZXingBrowser)throw new Error('ZXing no disponible');
+    const reader=new ZXingBrowser.BrowserMultiFormatReader(undefined,{delayBetweenScanAttempts:80,delayBetweenScanSuccess:300});
+    zxingControls=await reader.decodeFromVideoElement(video,(result)=>{if(result)setResult(result.getText?result.getText():result.text,'ZXing')});
+  }
+
+  async function startCamera(){
+    stopCamera();cameraStatus.textContent='Solicitando cámara…';
+    try{
+      try{
+        stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{exact:'environment'},width:{ideal:1920,min:1280},height:{ideal:1080,min:720},frameRate:{ideal:30,max:30}}});
+      }catch{
+        stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080},frameRate:{ideal:30,max:30}}});
+      }
+      video.srcObject=stream;await video.play();track=stream.getVideoTracks()[0];await setupTrack();
+      const settings=track.getSettings?track.getSettings():{};const res=settings.width&&settings.height?` · ${settings.width}×${settings.height}`:'';
+      startBtn.disabled=true;stopBtn.disabled=false;scanning=true;
+      const nativeOk=await initNativeDetector();
+      if(nativeOk){cameraStatus.textContent='Buscando ISBN · EAN‑13'+res;nativeScanLoop()}
+      else{cameraStatus.textContent='Buscando ISBN · ZXing'+res;await startZXingFallback()}
+    }catch(err){console.error(err);stopCamera();cameraStatus.textContent='No se pudo abrir la cámara';validationText.textContent='Revisá el permiso de cámara y abrí la web por HTTPS.';showToast('Error al abrir la cámara')}
+  }
+
+  function stopCamera(){
+    scanning=false;if(scanTimer){clearTimeout(scanTimer);scanTimer=null}if(zxingControls){try{zxingControls.stop()}catch{}zxingControls=null}if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}video.srcObject=null;track=null;nativeDetector=null;cameraStatus.textContent='Cámara detenida';startBtn.disabled=false;stopBtn.disabled=true;torchBtn.disabled=true;torchOn=false;torchBtn.textContent='Linterna';zoomWrap.classList.remove('show')
+  }
+
+  async function toggleTorch(){if(!track||!track.applyConstraints)return;torchOn=!torchOn;try{await track.applyConstraints({advanced:[{torch:torchOn}]});torchBtn.textContent=torchOn?'Apagar luz':'Linterna'}catch{torchOn=false;torchBtn.textContent='Linterna';showToast('La linterna no está disponible')}}
+  async function setZoom(){if(!track||!track.applyConstraints)return;const z=Number(zoomRange.value);zoomValue.textContent=z.toFixed(1).replace('.0','')+'×';try{await track.applyConstraints({advanced:[{zoom:z}]})}catch{}}
+
+  async function scanImage(file){
+    if(!file)return;const url=URL.createObjectURL(file),img=new Image();
+    img.onload=async()=>{let found=false;try{if(await initNativeDetector()){const codes=await nativeDetector.detect(img);for(const code of codes){if(code.format==='ean_13'||!code.format){setResult(code.rawValue,'foto');found=true;break}}}if(!found&&window.ZXingBrowser){const reader=new ZXingBrowser.BrowserMultiFormatReader(),result=await reader.decodeFromImageElement(img);if(result){setResult(result.getText?result.getText():result.text,'foto');found=true}}if(!found){validationText.textContent='No pude detectar un ISBN en esa imagen.';showToast('No se encontró un ISBN')}}catch{validationText.textContent='No pude detectar un ISBN en esa imagen.';showToast('No se encontró un ISBN')}finally{URL.revokeObjectURL(url);imageInput.value=''}};
+    img.onerror=()=>{URL.revokeObjectURL(url);showToast('No se pudo abrir la imagen')};img.src=url;
+  }
+
+  startBtn.addEventListener('click',startCamera);stopBtn.addEventListener('click',stopCamera);torchBtn.addEventListener('click',toggleTorch);zoomRange.addEventListener('input',setZoom);imageInput.addEventListener('change',e=>scanImage(e.target.files[0]));
+  copyBtn.addEventListener('click',async()=>{if(!currentISBN)return;try{await navigator.clipboard.writeText(currentISBN);showToast('ISBN copiado')}catch{showToast('No se pudo copiar')}});
+  clearBtn.addEventListener('click',()=>{currentISBN='';isbnResult.textContent='—';isbnResult.className='isbn';validationText.textContent='Apuntá al código de barras del libro.';copyBtn.disabled=true});
+  exportBtn.addEventListener('click',()=>{const items=getHistory();if(!items.length){showToast('No hay lecturas para exportar');return}const rows=[['ISBN','Fecha']].concat(items.map(i=>[i.isbn,i.timestamp])),csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n'),blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='isbn-escaneados.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});
+  clearHistoryBtn.addEventListener('click',()=>{if(getHistory().length&&confirm('¿Vaciar todo el historial de ISBN?'))saveHistory([])});window.addEventListener('pagehide',stopCamera);renderHistory();
+})();
 </script>
 </body>
 </html>
